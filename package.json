@@ -1,0 +1,22 @@
+{
+  "name": "devqamentorship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniel2000d/DevQAMentorship.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daniel2000d/DevQAMentorship/issues"
+  },
+  "homepage": "https://github.com/daniel2000d/DevQAMentorship#readme",
+  "devDependencies": {
+    "cypress": "^12.9.0"
+  }
+}
