@@ -1,3 +1,11 @@
+const functii = require("./functii");
+import {LogIn, Selectors} from "../e2e/POM.spec";
+import {Header} from "../e2e/HeaderPage";
+import {TopVoluntari} from "../e2e/TopVoluntaripage";
+import {Autentificare} from "../e2e/AutentificarePage";
+import {Recomandate} from "../e2e/NevoiRecomandatePage";
+import {Nevoi} from "../e2e/NevoiPage";
+
 describe("Functionalitate ", () => {
   beforeEach(() => {
     cy.viewport(1440, 900);
@@ -6,133 +14,194 @@ describe("Functionalitate ", () => {
 
   /// T1
   it("Verify that all header’s elements navigate to the correct page", () => {
-    cy.get("a").contains(" acasa ").click();
-    cy.url().should("contains", "/");
+    Header.Acasa().click();
+    Header.CheckUrlAcasa();
 
-    cy.get('a[href*="/search"]').click();
-    cy.url().should("contains", "/search");
-    cy.get('input[name="filter"]').should("be.visible");
+    Header.TopVoluntari().click();
+    Header.CheckUrlTopVoluntari();
 
-    cy.get('a[href*="/needs_list"]').click();
-    cy.url().should("contains", "/needs_list");
-    cy.get(".top-section > .col-sm-12 > .card > .card-header > .card-title").should(
-      "have.text",
-      "Lista nevoi & Cazuri speciale"
-    );
+    Header.CheckSearch();
 
-    cy.get('a[href*="/about"]').click();
-    cy.url().should("contains", "/about");
-    cy.get(".mb-5 h3.card-title").should("have.text", "Despre noi");
+    Header.Listanevoi().click();
+    Header.CheckUrlListaNevoi();
+    Header.CheckTitleListaNevoie();
 
-    cy.get('a[href*="/contact"]').click();
-    cy.url().should("contains", "/contact");
-    cy.get(".title").should("have.text", "Ofera o sugestie");
+    Header.About().click();
+    Header.CheckUrlAbout();
+    Header.CheckTextAbout();
 
-    cy.get('a[href*="/auth/register"]').click();
-    cy.url().should("contains", "/register");
-    cy.get(".card-header").should("have.text", "Inregistrare");
+    Header.Contact().click();
+    Header.CheckUrlContact();
+    Header.CheckTitleForm();
 
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.url().should("contains", "/login");
-    cy.get(".card-header").should("have.text", "Autentificare");
+    Header.DevinoVoluntar().click();
+    Header.CheckUrlDevinoVoluntar();
+    Header.CheckTitleFormDevinoVoluntar();
+
+    Header.Authentification().first().click();
+    Header.CheckUrlAuthentification();
+    Header.CheckTextAuthentification();
   });
-
+  ////t2
   it("Verify that on Top Voluntari page the map and at least one volunteer is displayed.", () => {
-    cy.get('a[href*="/search"]').click();
+    TopVoluntari.TopVoluntari().click();
     cy.get(".d-none").should("be.visible");
     cy.get(":nth-child(3) > .page-link").click();
     cy.get(".row > :nth-child(3)").should("be.visible");
   });
+  ///t3
 
   it("Verify the user is able to Zoom in or out the map", () => {
-    cy.get('a[href*="/search"]').click();
-    cy.get(".dismissButton").click();
-    cy.get(":nth-child(9) > .gm-control-active").click();
+    TopVoluntari.TopVoluntari().click();
+    TopVoluntari.DismissButton().click();
+    TopVoluntari.Map().click();
     for (let i = 0; i < 3; i++) {
-      cy.get('[aria-label="Zoom in"]').click();
+      TopVoluntari.ZoominMap().click();
     }
     for (let i = 0; i < 3; i++) {
-      cy.get('[aria-label="Zoom out"]').click();
+      TopVoluntari.ZoomoutMap().click();
     }
   });
-
+  ///t4
   it("Verify that Login functionality works with valid credentials", () => {
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.get('input[name="phone_number"]').type("0748087633");
-    cy.get('input[name="password"]').type("daniel");
-    cy.get(".btn").click();
+    Autentificare.Authentification().first().click();
+    functii.login("0748087633", "daniel");
     cy.get(".simple-text").should("be.visible");
   });
-
+  //t5
   it("Verify that Login functionality works with invalid credentials", () => {
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.get('input[name="phone_number"]').type("123456789");
-    cy.get('input[name="password"]').type("@!32");
-    cy.get(".btn").click();
+    Autentificare.Authentification().first().click();
+    functii.login("123456789", "@!32");
 
-    cy.get(".alert").should("be.visible");
-    cy.url().should("contains", "login");
+    Autentificare.Alert();
+    Autentificare.CheckUrlAuthentification();
   });
-
+  ////t6
   it("Verify that a user is able to add a new Nevoie recomandata", () => {
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.get('input[name="phone_number"]').type("0748087633");
-    cy.get('input[name="password"]').type("daniel");
-    cy.get(".btn").click();
-    cy.get(":nth-child(3) > .nav-link > p").click();
-    cy.get(".btn").click();
-    cy.get('input[name="contact_first_name"]').type("daniel");
-    cy.get('input[name="contact_last_name"]').type("vieru");
-    cy.get('input[name="contact_phone_number"]').type("0748087633");
+    Recomandate.Authentification().first().click();
+    functii.login("0748087633", "daniel");
+    Recomandate.NevoiRecomandatebtn().click();
+    Recomandate.Addbtn().click();
+    Recomandate.Firstname().type("daniel");
+    Recomandate.LastName().type("vieru");
+    Recomandate.PhoneNumber().type("0748087633");
 
-    cy.get(".vs__search").click();
-    cy.contains("Alimente").click();
-    cy.get('textarea[name="description"]').type("descriere");
-    cy.get('input[placeholder="Nume strada, numar ..."]').type("unirii");
-    cy.get('input[name="details"]').type("detalii");
-    cy.get('input[name="county"]').type("Suceava");
-    cy.get('input[name="city"]').type("Suceava");
-    cy.get('input[name="postal_code"]').type("Suceava");
-    cy.get("form").submit();
+    Recomandate.selectedoption().click();
+    Recomandate.Choose().click();
+    Recomandate.Description().type("descrierea");
+    Recomandate.Location().type("unirii");
+    Recomandate.Details().type("detalii");
+    Recomandate.County().type("Suceava");
+    Recomandate.City().type("Suceava");
+    Recomandate.PostalCode().type("Suceava");
+    Recomandate.submit();
   });
-
+  ///t7
   it("Verify that the Descriere field is required ", () => {
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.get('input[name="phone_number"]').type("0748087633");
-    cy.get('input[name="password"]').type("daniel");
-    cy.get(".btn").click();
-    cy.get(":nth-child(3) > .nav-link > p").click();
-    cy.get(".btn").click();
-    cy.get('input[name="contact_first_name"]').type("daniel");
-    cy.get('input[name="contact_last_name"]').type("vieru");
-    cy.get('input[name="contact_phone_number"]').type("0748087633");
+    Recomandate.Authentification().first().click();
+    functii.login("0748087633", "daniel");
+    Recomandate.NevoiRecomandatebtn().click();
+    Recomandate.Addbtn().click();
+    Recomandate.Firstname().type("daniel");
+    Recomandate.LastName().type("vieru");
+    Recomandate.PhoneNumber().type("0748087633");
 
-    cy.get(".vs__search").click();
-    cy.contains("Alimente").click();
-    cy.get('input[placeholder="Nume strada, numar ..."]').type("unirii");
-    cy.get('input[name="details"]').type("detalii");
-    cy.get('input[name="county"]').type("Suceava");
-    cy.get('input[name="city"]').type("Suceava");
-    cy.get('input[name="postal_code"]').type("Suceava");
-    cy.get("form").submit();
+    Recomandate.selectedoption().click();
+    Recomandate.Choose().click();
+    Recomandate.Location().type("unirii");
+    Recomandate.Details().type("detalii");
+    Recomandate.County().type("Suceava");
+    Recomandate.City().type("Suceava");
+    Recomandate.PostalCode().type("Suceava");
+    Recomandate.submit();
   });
+  ////t8
 
-  it("Verify that the user is able to use Vizualizeaza  functionality ", () => {
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.get('input[name="phone_number"]').type("0748087633");
-    cy.get('input[name="password"]').type("daniel");
-    cy.get(".btn").click();
-    cy.get(":nth-child(3) > .nav-link > p").click();
-    cy.get(".fa-eye").click();
+  it("Verify the search functionality", () => {
+    cy.wait(3000);
+    Recomandate.Authentification().first().click();
 
-    cy.get(".card-header").contains("h5.card-title", "Vizualizare nevoie");
+    functii.login("0748087633", "daniel");
+    Recomandate.NevoiRecomandatebtn().click();
+    Recomandate.View().first().click();
+    Recomandate.ViewText();
+    Recomandate.Status();
   });
-
+  ////t9
   it("Verify that the user is able to use Sterge functionality", () => {
-    cy.get('a[href*="/auth/login"]').first().click();
-    cy.get('input[name="phone_number"]').type("0748087633");
-    cy.get('input[name="password"]').type("daniel");
-    cy.get(".btn").click();
-    cy.get(":nth-child(2) > .nav-link > p").click();
+    Recomandate.Authentification().first().click();
+    functii.login("0748087633", "daniel");
+    Recomandate.NevoiRecomandatebtn().click();
+    Recomandate.DeleteIcon().first().click();
+    Recomandate.Deletebtn().click();
+  });
+  ////t10
+  it("Verify the search functionality", () => {
+    Recomandate.Authentification().first().click();
+
+    functii.login("0748087633", "daniel");
+    Recomandate.NevoiRecomandatebtn().click();
+    Recomandate.Search().type("alex");
+
+    Recomandate.Search().clear();
+    Recomandate.Search().type("dadada");
+  });
+
+  // T11
+
+  it("Verify that the user is able to use Vizualizeaza functionality", () => {
+    cy.wait(3000);
+    Nevoi.Authentification().first().click();
+
+    functii.login("0748087633", "daniel");
+    Nevoi.Nevoibtn().click();
+    Nevoi.Viewicon().first().click();
+    Nevoi.CheckTitle();
+    Nevoi.Status2();
+  });
+
+  //T12
+
+  it("Verify “Aplica” functionality", () => {
+    Nevoi.Authentification().first().click();
+
+    functii.login("0748087633", "daniel");
+    Nevoi.Nevoibtn().click();
+    cy.get("tbody tr td:nth-child(4)").each(($el, index, $list) => {
+      const text = $el.text().trim();
+      if (text === "Deschis") {
+        cy.get(`tbody tr:nth-child(${index + 1}) td:nth-child(5) .fa-user-check`).click();
+        return false;
+      }
+    });
+
+    Nevoi.Titleform();
+    Nevoi.Btn().click();
+  });
+
+  //T13
+  it("Verify “Completeaza” functionality", () => {
+    Nevoi.Authentification().first().click();
+    functii.login("0748087633", "daniel");
+    Nevoi.Nevoibtn().click();
+    Nevoi.SelectAllCell().each(($el, index, $list) => {
+      const text = $el.text().trim();
+      if (text === "In progres") {
+        cy.get(`tbody tr:nth-child(${index + 1}) td:nth-child(5) .fa-check`).click();
+        return false;
+      }
+    });
+    Nevoi.SelectStar().first().click();
+
+    Nevoi.WriteComment().type("nota 10");
+    Nevoi.Btn().click();
+  });
+  //T14
+  it("Verify that the user is able to properly logout", () => {
+    Nevoi.Authentification().first().click();
+
+    functii.login("0748087633", "daniel");
+    Nevoi.Logout().click();
+    cy.visit("https://iwanttohelp.bim.assistcloud.services");
   });
 });
