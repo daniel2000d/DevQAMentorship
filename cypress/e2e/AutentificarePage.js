@@ -9,3 +9,14 @@ export class Autentificare {
     cy.url().should("contains", "login");
   }
 }
+export class LogIn {
+  static getUsername() {
+    return cy.get('input[name="phone_number"]');
+  }
+  static getPassword() {
+    return cy.get('input[name="password"]');
+  }
+  static Submit() {
+    return cy.get(".btn");
+  }
+}

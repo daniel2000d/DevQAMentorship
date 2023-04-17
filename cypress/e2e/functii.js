@@ -1,4 +1,4 @@
-import {LogIn} from "../e2e/POM.spec";
+import {LogIn} from "../e2e/AutentificarePage";
 
 module.exports = {
   login(email, password) {

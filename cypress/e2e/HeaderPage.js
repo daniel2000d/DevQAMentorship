@@ -1,6 +1,6 @@
 export class Header {
   static Acasa() {
-    return cy.get("a").contains(" acasa ");
+    return cy.get("a");
   }
   static TopVoluntari() {
     return cy.get('a[href*="/search"]');
@@ -21,47 +21,66 @@ export class Header {
     return cy.get('a[href*="/auth/register"]');
   }
   static CheckUrlAcasa() {
-    return cy.url().should("contains", "/");
+    return cy.url();
+  }
+  static CheckMap() {
+    return cy.get(".d-none");
   }
 
   static CheckUrlTopVoluntari() {
     return cy.url().should("contains", "/search");
   }
   static CheckSearch() {
-    return cy.get('input[name="filter"]').should("be.visible");
+    return cy.get('input[name="filter"]');
   }
   static CheckUrlListaNevoi() {
-    return cy.url().should("contains", "/needs_list");
+    return cy.url();
   }
 
   static CheckUrlAbout() {
-    return cy.url().should("contains", "/about");
+    return cy.url();
   }
   static CheckTextAbout() {
-    return cy.get(".mb-5 h3.card-title").should("have.text", "Despre noi");
+    return cy.get(".mb-5 h3.card-title");
   }
   static CheckUrlContact() {
-    return cy.url().should("contains", "/contact");
+    return cy.url();
   }
 
   static CheckTitleForm() {
-    return cy.get(".title").should("have.text", "Ofera o sugestie");
+    return cy.get(".title");
   }
   static CheckTitleListaNevoie() {
-    return cy
-      .get(".top-section > .col-sm-12 > .card > .card-header > .card-title")
-      .should("have.text", "Lista nevoi & Cazuri speciale");
+    return cy.get(".top-section > .col-sm-12 > .card > .card-header > .card-title");
   }
   static CheckUrlDevinoVoluntar() {
-    return cy.url().should("contains", "/register");
+    return cy.url();
   }
   static CheckTitleFormDevinoVoluntar() {
-    return cy.get(".card-header").should("have.text", "Inregistrare");
+    return cy.get(".card-header");
   }
   static CheckUrlAuthentification() {
-    return cy.url().should("contains", "/login");
+    return cy.url();
   }
   static CheckTextAuthentification() {
-    return cy.get(".card-header").should("have.text", "Autentificare");
+    return cy.get(".card-header");
+  }
+  static SuggestionName() {
+    return cy.get('input[name="last_name"]');
+  }
+  static SuggestionEmail() {
+    return cy.get('input[name="email"]');
+  }
+  static SuggestionDescription() {
+    return cy.get('textarea[name="message"]');
+  }
+  static NextPage() {
+    return cy.get(":nth-child(3) > .page-link");
+  }
+  static RowCheck() {
+    return cy.get(".row > :nth-child(3)");
+  }
+  static BTN() {
+    return cy.get(".btn");
   }
 }
